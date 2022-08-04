@@ -3,3 +3,4 @@ slackeventsapi
 requests
 python-dotenv
 flask
+gunicorn
