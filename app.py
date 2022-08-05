@@ -85,7 +85,7 @@ def add_user():
     else:
         try:
             body = ast.literal_eval(parameter.replace('\n', ''))
-            message = clockify_api.add_client(body)
+            message = clockify_api.add_user(body)
         except:
             message = 'Command parameter is not a json.'
 
