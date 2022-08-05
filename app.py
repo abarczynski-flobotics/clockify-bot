@@ -26,19 +26,66 @@ def add_project():
         Description: Adds new project to workspace.
         Parameter example:
         {
-        "name": "My API Project",
-        // OPTIONAL
-        "clientId": "",
-        "isPublic": "false",
-        "color": "#f44336",
-        "note": "This is project's note",
-        "billable": "true",
-        "public": false
+            "name": "My API Project",
+            // OPTIONAL
+            "clientId": "",
+            "isPublic": "false",
+            "color": "#f44336",
+            "note": "This is project's note",
+            "billable": "true",
+            "public": false
         }"""
     else:
         try:
             body = ast.literal_eval(parameter.replace('\n', ''))
             message = clockify_api.add_project(body)
+        except:
+            message = 'Command parameter is not a json.'
+
+    client.chat_postMessage(channel=channel_id, text=message)
+    return Response(), 200
+
+@app.route('/add-client', methods=['POST'])
+def add_client():
+    data = request.form
+    channel_id = data.get('channel_id')
+    parameter = data.get('text')
+    if parameter.lower().strip() == 'help':
+        message = """
+        Command: add-client
+        Description: Adds new client to workspace.
+        Parameter example:
+        {
+            "name": "Client X",
+            "note": "My note about Client X"
+        }"""
+    else:
+        try:
+            body = ast.literal_eval(parameter.replace('\n', ''))
+            message = clockify_api.add_client(body)
+        except:
+            message = 'Command parameter is not a json.'
+
+    client.chat_postMessage(channel=channel_id, text=message)
+    return Response(), 200
+
+@app.route('/add-user', methods=['POST'])
+def add_user():
+    data = request.form
+    channel_id = data.get('channel_id')
+    parameter = data.get('text')
+    if parameter.lower().strip() == 'help':
+        message = """
+        Command: add-user
+        Description: Adds new user to workspace.
+        Parameter example:
+        {
+            "email": "example@email.com"
+        }"""
+    else:
+        try:
+            body = ast.literal_eval(parameter.replace('\n', ''))
+            message = clockify_api.add_client(body)
         except:
             message = 'Command parameter is not a json.'
 
