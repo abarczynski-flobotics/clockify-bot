@@ -1,6 +1,3 @@
-slackclient
-slackeventsapi
 requests
 python-dotenv
-flask
-gunicorn
+slack_bolt

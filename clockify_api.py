@@ -1,10 +1,9 @@
 import requests
 from requests.exceptions import HTTPError
-from pathlib import Path
 from dotenv import load_dotenv
 import os
 
-env_path = Path('.') / '.env'
+env_path = '.env'
 load_dotenv(dotenv_path=env_path)
 
 data = {'x-api-key': os.environ['API_KEY']}
