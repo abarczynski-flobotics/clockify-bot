@@ -16,12 +16,13 @@ app = App(
 def handle_view_events(ack, body):
 
     actions = {
-        "Add new client": clockify_api.add_client(prepare_json.json_add_client(body)),
-        "Add new project": clockify_api.add_project(prepare_json.json_add_project(body)),
-        "Add new user": clockify_api.add_user(prepare_json.json_add_user(body))
+        "Add new client": (clockify_api.add_client, prepare_json.json_add_client),
+        "Add new project": (clockify_api.add_project, prepare_json.json_add_project),
+        "Add new user": (clockify_api.add_user, prepare_json.json_add_user)
     }
 
-    message, success = actions[body['view']['title']['text']]
+    clockify_api_func, prepare_json_func = actions[body['view']['title']['text']]
+    message, success = clockify_api_func(prepare_json_func(body))
 
     view_result = views.view_result
 
