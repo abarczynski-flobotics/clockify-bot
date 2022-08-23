@@ -1,3 +1,4 @@
+from email.quoprimime import body_length
 import os
 from dotenv import load_dotenv
 import clockify_api
@@ -15,14 +16,25 @@ app = App(
 @app.view("")
 def handle_view_events(ack, body):
 
-    actions = {
+    create_actions = {
         "Add new client": (clockify_api.add_client, prepare_json.json_add_client),
         "Add new project": (clockify_api.add_project, prepare_json.json_add_project),
         "Add new user": (clockify_api.add_user, prepare_json.json_add_user)
     }
 
-    clockify_api_func, prepare_json_func = actions[body['view']['title']['text']]
-    message, success = clockify_api_func(prepare_json_func(body))
+    update_actions = {
+        "Update project": (clockify_api.update_project, prepare_json.json_update_project)
+    }
+
+    action = body['view']['title']['text']
+
+    if action in create_actions:
+        clockify_api_func, prepare_json_func = create_actions[action]
+        message, success = clockify_api_func(prepare_json_func(body))
+    elif action in update_actions:
+        clockify_api_func, prepare_json_func = update_actions[action]
+        body['projects'] = clockify_api.get_all_projects()
+        message, success = clockify_api_func(prepare_json_func(body))
 
     view_result = views.view_result
 
@@ -61,6 +73,25 @@ def open_add_project_window(ack, body, client):
         trigger_id=body["trigger_id"],
         view=view
     )
+
+@app.action("update-project")
+def open_update_project_window(ack, body, client):
+    ack()
+    projects = clockify_api.get_all_projects()
+    view = views.view_update_project
+    if projects:
+        view['blocks'][0]['element']['options'] = [{
+						"text": {
+							"type": "plain_text",
+							"text": p['name'],
+						},
+						"value": p['id']
+					} for p in projects]
+    client.views_open(
+        trigger_id=body["trigger_id"],
+        view=view
+    )
+
 
 @app.action("add-user")
 def open_add_user_window(ack, body, client):

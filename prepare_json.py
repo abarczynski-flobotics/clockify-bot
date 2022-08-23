@@ -13,6 +13,27 @@ def json_add_project(body):
     }
     return json
 
+def json_update_project(body):
+    hourly_rate = body['view']['state']['values']['hourly-rate']['hourly-rate']['value']
+    project_name = body['view']['state']['values']['project-name']['project-name']['selected_option']['text']['text']
+    project = ([p for p in body['projects'] if p['name'] == project_name])[0]
+    client_id = project['clientId']
+    public = project['public']
+    billable = project['billable']
+    note = project['note']
+    project_id = project['id']
+    json = {
+        "name": project_name,
+        "clientId": client_id,
+        "isPublic": public,
+        "hourlyRate": {
+            "amount": int(hourly_rate)*100
+        },
+        "note": note,
+        "billable": billable
+        }
+    return json, project_id
+
 def json_add_client(body):
     client_name = body['view']['state']['values']['client-name']['client-name']['value']
     client_note = body['view']['state']['values']['client-note']['client-note']['value']

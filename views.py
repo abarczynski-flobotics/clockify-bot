@@ -47,7 +47,7 @@ view_add_project={
 			},
 			"label": {
 				"type": "plain_text",
-				"text": "Client Name",
+				"text": "Client Name"
 			}
 		},
 		{
@@ -60,7 +60,7 @@ view_add_project={
 			},
 			"label": {
 				"type": "plain_text",
-				"text": "Project Note",
+				"text": "Project Note"
 			}
 		},
 		{
@@ -82,7 +82,7 @@ view_add_project={
 			},
 			"label": {
 				"type": "plain_text",
-				"text": "Billable",
+				"text": "Billable"
 			}
 		},
 		{
@@ -104,13 +104,67 @@ view_add_project={
 			},
 			"label": {
 				"type": "plain_text",
-				"text": "Public",
+				"text": "Public"
 			}
 		}
 	]
 }
 
 
+view_update_project = {
+	"type": "modal",
+	"title": {
+		"type": "plain_text",
+		"text": "Update project"
+	},
+	"submit": {
+		"type": "plain_text",
+		"text": "Update"
+	},
+	"close": {
+		"type": "plain_text",
+		"text": "Cancel"
+	},
+	"blocks": [
+		{
+			"type": "input",
+			"block_id": "project-name",
+			"element": {
+				"type": "static_select",
+				"placeholder": {
+					"type": "plain_text",
+					"text": "Select project name"
+				},
+				"options": [
+					{
+						"text": {
+							"type": "plain_text",
+							"text": " "
+						},
+						"value": "value-0"
+					}
+				],
+				"action_id": "project-name"
+			},
+			"label": {
+				"type": "plain_text",
+				"text": "Project Name"
+			}
+		},
+		{
+			"type": "input",
+			"block_id": "hourly-rate",
+			"element": {
+				"type": "plain_text_input",
+				"action_id": "hourly-rate"
+			},
+			"label": {
+				"type": "plain_text",
+				"text": "Hourly Rate"
+			}
+		}
+	]
+}
 
 view_add_client = {
             "type": "modal",
@@ -224,18 +278,24 @@ view_app_home = {
 					"type": "button",
 					"text": {
 						"type": "plain_text",
-						"text": "Add new client",
-						"emoji": True
+						"text": "Add new client"
 					},
 					"value": "click_me_123",
 					"action_id": "add-client"
-				},
+				}
+			]
+		},
+		{
+			"type": "divider"
+		},
+		{
+			"type": "actions",
+			"elements": [
 				{
 					"type": "button",
 					"text": {
 						"type": "plain_text",
-						"text": "Add new project",
-						"emoji": True
+						"text": "Add new project"
 					},
 					"value": "click_me_123",
 					"action_id": "add-project"
@@ -244,8 +304,24 @@ view_app_home = {
 					"type": "button",
 					"text": {
 						"type": "plain_text",
-						"text": "Add new user",
-						"emoji": True
+						"text": "Update project"
+					},
+					"value": "click_me_123",
+					"action_id": "update-project"
+				}
+			]
+		},
+		{
+			"type": "divider"
+		},
+		{
+			"type": "actions",
+			"elements": [
+				{
+					"type": "button",
+					"text": {
+						"type": "plain_text",
+						"text": "Add new user"
 					},
 					"value": "click_me_123",
 					"action_id": "add-user"
@@ -254,4 +330,3 @@ view_app_home = {
 		}
 	]
 }
-
