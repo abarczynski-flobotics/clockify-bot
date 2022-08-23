@@ -10,13 +10,13 @@ data = {'x-api-key': os.environ['API_KEY']}
 
 
 def get_all_clients():
-    url = f"https://api.clockify.me/api/v1/workspaces/{os.environ['WORKSPACE_ID']}/clients"
+    url = f"https://api.clockify.me/api/v1/workspaces/{os.environ['WORKSPACE_ID']}/clients?page-size=1000"
     r = requests.get(url, headers=data)
     return r.json()
 
 
 def get_all_projects():
-    url = f"https://api.clockify.me/api/v1/workspaces/{os.environ['WORKSPACE_ID']}/projects"
+    url = f"https://api.clockify.me/api/v1/workspaces/{os.environ['WORKSPACE_ID']}/projects?page-size=1000"
     r = requests.get(url, headers=data)
     return r.json()
 
@@ -63,7 +63,7 @@ def update_project(*request_data):
 
 def add_client(request_body):
 
-    url = f"https://api.clockify.me/api/v1/workspaces/{os.environ['WORKSPACE_ID']}/clients"
+    url = f"https://api.clockify.me/api/v1/workspaces/{os.environ['WORKSPACE_ID']}/clients?page-size=1000"
 
     try:
         r = requests.post(url, headers=data, json=request_body)
@@ -80,7 +80,7 @@ def add_client(request_body):
 
 def add_user(request_body):
 
-    url = f"https://api.clockify.me/api/v1/workspaces/{os.environ['WORKSPACE_ID']}/users"
+    url = f"https://api.clockify.me/api/v1/workspaces/{os.environ['WORKSPACE_ID']}/users?page-size=1000"
 
     try:
         r = requests.post(url, headers=data, json=request_body)
