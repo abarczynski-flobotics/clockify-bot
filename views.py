@@ -1,4 +1,5 @@
-view_add_project={
+def view_add_project():
+	return {
 	"type": "modal",
 	"title": {
 		"type": "plain_text",
@@ -111,7 +112,8 @@ view_add_project={
 }
 
 
-view_update_project = {
+def view_update_project():
+	return {
 	"type": "modal",
 	"title": {
 		"type": "plain_text",
@@ -166,7 +168,8 @@ view_update_project = {
 	]
 }
 
-view_add_client = {
+def view_add_client():
+	return {
             "type": "modal",
             "title": {
                 "type": "plain_text",
@@ -214,7 +217,8 @@ view_add_client = {
             ]
         }
 
-view_add_user = {
+def view_add_user():
+	return {
 	"type": "modal",
 	"title": {
 		"type": "plain_text",
@@ -246,7 +250,8 @@ view_add_user = {
 
 
 
-view_result = {
+def view_result():
+	return {
 	"type": "modal",
 	"title": {
 		"type": "plain_text",
@@ -268,7 +273,8 @@ view_result = {
 	]
 }
 
-view_app_home = {
+def view_app_home_authorized():
+	return {
 	"type": "home",
 	"blocks": [
 		{
@@ -327,6 +333,20 @@ view_app_home = {
 					"action_id": "add-user"
 				}
 			]
+		}
+	]
+}
+
+def view_app_home_not_authorized():
+	return {
+	"type": "home",
+	"blocks": [
+		{
+			"type": "section",
+			"text": {
+				"type": "mrkdwn",
+				"text": "You are not authorized person to use this bot!"
+			}
 		}
 	]
 }
