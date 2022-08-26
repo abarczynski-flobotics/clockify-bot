@@ -6,12 +6,26 @@ import clockify_api
 from slack_bolt import App
 import views
 import prepare_json
+from slack_bolt.oauth.oauth_settings import OAuthSettings
+from slack_sdk.oauth.installation_store import FileInstallationStore
+from slack_sdk.oauth.state_store import FileOAuthStateStore
 
 env_path ='.env'
 load_dotenv(dotenv_path=env_path)
+
+oauth_settings = OAuthSettings(
+    client_id=os.environ["SLACK_CLIENT_ID"],
+    client_secret=os.environ["SLACK_CLIENT_SECRET"],
+    scopes=["channels:history","chat:write","groups:history","groups:read","groups:write","users:read","im:history"],
+    installation_store=FileInstallationStore(base_dir="./data/installations"),
+    state_store=FileOAuthStateStore(expiration_seconds=600, base_dir="./data/states"),
+    install_page_rendering_enabled=False
+)
+
 app = App(
-    token=os.environ.get('SLACK_TOKEN'),
-    signing_secret=os.environ.get('SIGNING_SECRET')
+    #token=os.environ.get('SLACK_TOKEN'),
+    signing_secret=os.environ.get('SIGNING_SECRET'),
+    oauth_settings=oauth_settings
 )
 
 
@@ -251,23 +265,12 @@ def open_add_user_window(ack, body, client):
         view=views.view_add_user()
     )
 
-@app.event('app_home_opened')
-def update_home_tab(client, event, logger):
-    admins = os.environ.get('ADMINS').split(',')
-    user_name = app.client.users_info(user = event['user']).data['user']['name']
-    if user_name in admins:
-        try:
-            client.views_publish(
-                user_id=event['user'],
-                view=views.view_app_home_authorized()
-            )
-        except Exception as e:
-            logger.error(f'Error publishing home tab: {e}')
-    else:
-        client.views_publish(
-                user_id=event['user'],
-                view=views.view_app_home_not_authorized()
-            )
+@app.message("start")
+def say_hello(client, message,say):
+    say(
+            blocks=views.clockify_buttons()
+        )
+
 
 if __name__ == '__main__':
     app.start(port=int(os.environ.get('PORT', 3000)))

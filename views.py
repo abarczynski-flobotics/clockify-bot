@@ -273,10 +273,8 @@ def view_result():
 	]
 }
 
-def view_app_home_authorized():
-	return {
-	"type": "home",
-	"blocks": [
+def clockify_buttons():
+	return [
 		{
 			"type": "actions",
 			"elements": [
@@ -335,7 +333,6 @@ def view_app_home_authorized():
 			]
 		}
 	]
-}
 
 def view_app_home_not_authorized():
 	return {
