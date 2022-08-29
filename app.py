@@ -266,8 +266,8 @@ def open_add_user_window(ack, body, client):
 @app.message("start")
 def say_hello(client, message,say):
     say(
-            text="",
-            blocks=views.clockify_buttons()
+            blocks=views.clockify_buttons(),
+            text=" "
         )
 
 
