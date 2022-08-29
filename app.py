@@ -5,8 +5,9 @@ from slack_bolt import App
 import views
 import prepare_json
 from slack_bolt.oauth.oauth_settings import OAuthSettings
-from slack_sdk.oauth.installation_store import FileInstallationStore
+from installation_store import FileInstallationStore
 from slack_sdk.oauth.state_store import FileOAuthStateStore
+from slack_bolt.authorization import authorize
 
 env_path ='.env'
 load_dotenv(dotenv_path=env_path)
@@ -19,12 +20,13 @@ oauth_settings = OAuthSettings(
     state_store=FileOAuthStateStore(expiration_seconds=600, base_dir="./data/states"),
     install_page_rendering_enabled=False
 )
-
+authorize()
 app = App(
     #token=os.environ.get('SLACK_TOKEN'),
     signing_secret=os.environ.get('SIGNING_SECRET'),
     oauth_settings=oauth_settings
 )
+
 
 @app.view('')
 def handle_view_events(ack, body):
@@ -264,6 +266,7 @@ def open_add_user_window(ack, body, client):
 @app.message("start")
 def say_hello(client, message,say):
     say(
+            text="",
             blocks=views.clockify_buttons()
         )
 
