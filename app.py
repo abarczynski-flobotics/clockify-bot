@@ -265,7 +265,7 @@ def open_add_user_window(ack, body, client):
 
 @app.message("start")
 def say_hello(client, message,say):
-    channel_id = message['channel_id']
+    channel_id = message['channel']
     if channel_id=='clockifybot':
         say(
                 blocks=views.clockify_buttons(),
