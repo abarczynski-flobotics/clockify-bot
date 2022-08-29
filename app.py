@@ -15,7 +15,7 @@ load_dotenv(dotenv_path=env_path)
 oauth_settings = OAuthSettings(
     client_id=os.environ["SLACK_CLIENT_ID"],
     client_secret=os.environ["SLACK_CLIENT_SECRET"],
-    scopes=["channels:history","chat:write","groups:history","groups:read","groups:write","users:read","im:history"],
+    scopes=["channels:history","channels:read","chat:write","groups:history","groups:read","groups:write","users:read","im:history"],
     installation_store=FileInstallationStore(base_dir="./data/installations"),
     state_store=FileOAuthStateStore(expiration_seconds=600, base_dir="./data/states"),
     install_page_rendering_enabled=False
@@ -266,10 +266,10 @@ def open_add_user_window(ack, body, client):
 @app.message("start")
 def say_hello(client, message,say):
     channel_id = message['channel']
-    if channel_id=='clockifybot':
+    if channel_id=='C03VATR9BPD':
         say(
                 blocks=views.clockify_buttons(),
-                text=" "
+                text="Select action"
             )
 
 
