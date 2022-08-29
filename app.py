@@ -6,13 +6,13 @@ import clockify_api
 from slack_bolt import App
 import views
 import prepare_json
-from slack_bolt.oauth.oauth_settings import OAuthSettings
-from slack_sdk.oauth.installation_store import FileInstallationStore
-from slack_sdk.oauth.state_store import FileOAuthStateStore
+#from slack_bolt.oauth.oauth_settings import OAuthSettings
+#from slack_sdk.oauth.installation_store import FileInstallationStore
+#from slack_sdk.oauth.state_store import FileOAuthStateStore
 
 env_path ='.env'
 load_dotenv(dotenv_path=env_path)
-
+"""
 oauth_settings = OAuthSettings(
     client_id=os.environ["SLACK_CLIENT_ID"],
     client_secret=os.environ["SLACK_CLIENT_SECRET"],
@@ -22,10 +22,11 @@ oauth_settings = OAuthSettings(
     install_page_rendering_enabled=False
 )
 
+"""
 app = App(
-    #token=os.environ.get('SLACK_TOKEN'),
+    token=os.environ.get('SLACK_TOKEN'),
     signing_secret=os.environ.get('SIGNING_SECRET'),
-    oauth_settings=oauth_settings
+    #oauth_settings=oauth_settings
 )
 
 
