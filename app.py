@@ -5,7 +5,7 @@ from slack_bolt import App
 import views
 import prepare_json
 from slack_bolt.oauth.oauth_settings import OAuthSettings
-from installation_store import FileInstallationStore
+from slack_sdk.oauth.installation_store import FileInstallationStore
 from slack_sdk.oauth.state_store import FileOAuthStateStore
 from slack_bolt.authorization import authorize
 
