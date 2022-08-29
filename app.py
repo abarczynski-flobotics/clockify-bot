@@ -20,7 +20,7 @@ oauth_settings = OAuthSettings(
     state_store=FileOAuthStateStore(expiration_seconds=600, base_dir="./data/states"),
     install_page_rendering_enabled=False
 )
-authorize()
+
 app = App(
     #token=os.environ.get('SLACK_TOKEN'),
     signing_secret=os.environ.get('SIGNING_SECRET'),
