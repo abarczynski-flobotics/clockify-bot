@@ -29,14 +29,14 @@ def view_add_project():
 		{
 			"type": "input",
 			"block_id": "client-name",
-			"optional": True,
 			"element": {
 				"type": "static_select",
 				"placeholder": {
 					"type": "plain_text",
 					"text": "Select client name"
 				},
-				"options": [{
+				"options": [
+					{
 						"text": {
 							"type": "plain_text",
 							"text": " "
@@ -70,6 +70,15 @@ def view_add_project():
 			"optional": True,
 			"element": {
 				"type": "checkboxes",
+				"initial_options": [
+					{
+						"text": {
+							"type": "plain_text",
+							"text": " "
+						},
+						"value": "value-0"
+					}
+				],
 				"options": [
 					{
 						"text": {
@@ -92,6 +101,15 @@ def view_add_project():
 			"optional": True,
 			"element": {
 				"type": "checkboxes",
+				"initial_options": [
+					{
+						"text": {
+							"type": "plain_text",
+							"text": " "
+						},
+						"value": "value-0"
+					}
+				],
 				"options": [
 					{
 						"text": {
@@ -267,7 +285,6 @@ def view_result():
 			"text": {
 				"type": "plain_text",
 				"text": "{}",
-				"emoji": True
 			}
 		}
 	]
