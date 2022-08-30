@@ -51,7 +51,7 @@ def handle_view_events(ack, body):
         body['projects'] = clockify_api.get_all_projects()
         message, success = clockify_api_func(prepare_json_func(body))
 
-    view_result = views.view_result
+    view_result = views.view_result()
 
     if success:
         view_result['title']['text'] = 'Success!'
