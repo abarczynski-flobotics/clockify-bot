@@ -1,10 +1,10 @@
 import os
 import sys
 from dotenv import load_dotenv
-import clockify_api
+import clockify_api as clockify_api
 from slack_bolt import App
-import views
-import prepare_json
+import views as views
+import prepare_json as prepare_json
 from slack_bolt.oauth.oauth_settings import OAuthSettings
 from slack_sdk.oauth.installation_store import FileInstallationStore
 from slack_sdk.oauth.state_store import FileOAuthStateStore
@@ -19,16 +19,17 @@ oauth_settings = OAuthSettings(
     client_secret=os.environ["SLACK_CLIENT_SECRET"],
     scopes=["channels:history", "channels:read", "chat:write", "groups:history",
             "groups:read", "groups:write", "users:read", "im:history"],
-    installation_store=FileInstallationStore(base_dir="./data/installations"),
+    installation_store=FileInstallationStore(base_dir=".'/tmp/installations"),
     state_store=FileOAuthStateStore(
-        expiration_seconds=600, base_dir="./data/states"),
+        expiration_seconds=600, base_dir="./tmp/states"),
     install_page_rendering_enabled=False
 )
 
 app = App(
     # token=os.environ.get('SLACK_TOKEN'),
     signing_secret=os.environ.get('SIGNING_SECRET'),
-    oauth_settings=oauth_settings
+    oauth_settings=oauth_settings,
+    process_before_response=True
 )
 
 
