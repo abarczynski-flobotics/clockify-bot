@@ -9,7 +9,7 @@ from slack_bolt.oauth.oauth_settings import OAuthSettings
 from slack_sdk.oauth.installation_store import FileInstallationStore
 from slack_sdk.oauth.state_store import FileOAuthStateStore
 from slack_bolt.authorization import authorize
-from slack_bolt.adapter.aws_lambda import SlackRequestHandler
+#from slack_bolt.adapter.aws_lambda import SlackRequestHandler
 
 env_path = '.env'
 load_dotenv(dotenv_path=env_path)
@@ -19,9 +19,9 @@ oauth_settings = OAuthSettings(
     client_secret=os.environ["SLACK_CLIENT_SECRET"],
     scopes=["channels:history", "channels:read", "chat:write", "groups:history",
             "groups:read", "groups:write", "users:read", "im:history"],
-    installation_store=FileInstallationStore(base_dir=".'/tmp/installations"),
+    installation_store=FileInstallationStore(base_dir="./data/installations"),
     state_store=FileOAuthStateStore(
-        expiration_seconds=600, base_dir="./tmp/states"),
+        expiration_seconds=600, base_dir="./data/states"),
     install_page_rendering_enabled=False
 )
 
@@ -289,8 +289,8 @@ def say_hello(client, message, say):
         )
 
 
-def handler(event, context):
-    return SlackRequestHandler(app=app).handle(event, context)
+# def handler(event, context):
+ #   return SlackRequestHandler(app=app).handle(event, context)
 
 
 if __name__ == '__main__':
