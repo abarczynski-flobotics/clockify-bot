@@ -1,4 +1,5 @@
 import os
+import sys
 from dotenv import load_dotenv
 import clockify_api
 from slack_bolt import App
@@ -8,21 +9,24 @@ from slack_bolt.oauth.oauth_settings import OAuthSettings
 from slack_sdk.oauth.installation_store import FileInstallationStore
 from slack_sdk.oauth.state_store import FileOAuthStateStore
 from slack_bolt.authorization import authorize
+from slack_bolt.adapter.aws_lambda import SlackRequestHandler
 
-env_path ='.env'
+env_path = '.env'
 load_dotenv(dotenv_path=env_path)
 
 oauth_settings = OAuthSettings(
     client_id=os.environ["SLACK_CLIENT_ID"],
     client_secret=os.environ["SLACK_CLIENT_SECRET"],
-    scopes=["channels:history","channels:read","chat:write","groups:history","groups:read","groups:write","users:read","im:history"],
+    scopes=["channels:history", "channels:read", "chat:write", "groups:history",
+            "groups:read", "groups:write", "users:read", "im:history"],
     installation_store=FileInstallationStore(base_dir="./data/installations"),
-    state_store=FileOAuthStateStore(expiration_seconds=600, base_dir="./data/states"),
+    state_store=FileOAuthStateStore(
+        expiration_seconds=600, base_dir="./data/states"),
     install_page_rendering_enabled=False
 )
 
 app = App(
-    #token=os.environ.get('SLACK_TOKEN'),
+    # token=os.environ.get('SLACK_TOKEN'),
     signing_secret=os.environ.get('SIGNING_SECRET'),
     oauth_settings=oauth_settings
 )
@@ -57,9 +61,9 @@ def handle_view_events(ack, body):
         view_result['title']['text'] = 'Success!'
     else:
         view_result['title']['text'] = 'Error!'
-    
+
     view_result['blocks'][0]['text']['text'] = message
-    
+
     ack(response_action='update', view=view_result)
 
 
@@ -71,19 +75,21 @@ def open_add_client_window(ack, body, client):
         view=views.view_add_client()
     )
 
+
 @app.action('add-project')
 def open_add_project_window(ack, body, client):
     ack()
-    clients = [cl for cl in clockify_api.get_all_clients() if not cl['archived']]
+    clients = [cl for cl in clockify_api.get_all_clients()
+               if not cl['archived']]
     view = views.view_add_project()
     if clients:
         view['blocks'][1]['element']['options'] = [{
-						'text': {
-							'type': 'plain_text',
-							'text': cl['name'],
-						},
-						'value': cl['id']
-					} for cl in clients]
+            'text': {
+                'type': 'plain_text',
+                'text': cl['name'],
+            },
+            'value': cl['id']
+        } for cl in clients]
     client.views_open(
         trigger_id=body['trigger_id'],
         view=view
@@ -93,18 +99,19 @@ def open_add_project_window(ack, body, client):
 @app.action('update-project')
 def open_update_project_window(ack, body, client):
     ack()
-    projects = [p for p in clockify_api.get_all_projects() if not p['archived']]
+    projects = [p for p in clockify_api.get_all_projects()
+                if not p['archived']]
     view = views.view_update_project()
     if projects:
         view['blocks'][0]['element']['options'] = [{
-						'text': {
-							'type': 'plain_text',
-							'text': p['name'],
-						},
-						'value': p['id'] + ' - ' + str(projects.index(p))
-					} for i,p in enumerate(projects[0:min(100,len(projects))])]
-        if len(projects)>100:
-            view['blocks'].insert(1,{
+            'text': {
+                'type': 'plain_text',
+                'text': p['name'],
+            },
+            'value': p['id'] + ' - ' + str(projects.index(p))
+        } for i, p in enumerate(projects[0:min(100, len(projects))])]
+        if len(projects) > 100:
+            view['blocks'].insert(1, {
                 'type': 'actions',
                 'elements': [
                     {
@@ -119,25 +126,29 @@ def open_update_project_window(ack, body, client):
                     }
                 ]
             })
-    
+
     client.views_open(
         trigger_id=body['trigger_id'],
         view=view
     )
 
+
 @app.action('show-next-proj')
 def update_update_project_window(ack, body, client):
     ack()
-    projects = [p for p in clockify_api.get_all_projects() if not p['archived']]
+    projects = [p for p in clockify_api.get_all_projects()
+                if not p['archived']]
     view = views.view_update_project()
     if projects:
-        current_min_index = int(body['view']['blocks'][0]['element']['options'][0]['value'].split(' - ')[-1])
-        current_max_index = int(body['view']['blocks'][0]['element']['options'][-1]['value'].split(' - ')[-1])
+        current_min_index = int(
+            body['view']['blocks'][0]['element']['options'][0]['value'].split(' - ')[-1])
+        current_max_index = int(
+            body['view']['blocks'][0]['element']['options'][-1]['value'].split(' - ')[-1])
         next_min_index = current_min_index + 100
         next_max_index = min(current_max_index + 100, len(projects))
 
         if next_max_index < len(projects):
-            view['blocks'].insert(1,{
+            view['blocks'].insert(1, {
                 'type': 'actions',
                 'elements': [{
                     'type': 'button',
@@ -148,7 +159,7 @@ def update_update_project_window(ack, body, client):
                     'style': 'danger',
                     'value': 'click_me_123',
                     'action_id': 'show-prev-proj'
-                },{
+                }, {
                     'type': 'button',
                     'text': {
                         'type': 'plain_text',
@@ -157,11 +168,11 @@ def update_update_project_window(ack, body, client):
                     'style': 'primary',
                     'value': 'click_me_123',
                     'action_id': 'show-next-proj'
-                }          
+                }
                 ]
             })
         else:
-            view['blocks'].insert(1,{
+            view['blocks'].insert(1, {
                 'type': 'actions',
                 'elements': [{
                     'type': 'button',
@@ -172,17 +183,17 @@ def update_update_project_window(ack, body, client):
                     'style': 'danger',
                     'value': 'click_me_123',
                     'action_id': 'show-prev-proj'
-                }           
+                }
                 ]
             })
-            
+
         view['blocks'][0]['element']['options'] = [{
-						'text': {
-							'type': 'plain_text',
-							'text': p['name'],
-						},
-						'value': p['id'] + ' - ' + str(projects.index(p))
-					} for i,p in enumerate(projects[next_min_index:next_max_index+1])]
+            'text': {
+                'type': 'plain_text',
+                'text': p['name'],
+            },
+            'value': p['id'] + ' - ' + str(projects.index(p))
+        } for i, p in enumerate(projects[next_min_index:next_max_index+1])]
 
     client.views_update(
         view_id=body['view']['id'],
@@ -190,18 +201,21 @@ def update_update_project_window(ack, body, client):
         view=view
     )
 
+
 @app.action('show-prev-proj')
 def update_update_project_window(ack, body, client):
     ack()
-    projects = [p for p in clockify_api.get_all_projects() if not p['archived']]
+    projects = [p for p in clockify_api.get_all_projects()
+                if not p['archived']]
     view = views.view_update_project()
     if projects:
-        current_min_index = int(body['view']['blocks'][0]['element']['options'][0]['value'].split(' - ')[-1])
+        current_min_index = int(
+            body['view']['blocks'][0]['element']['options'][0]['value'].split(' - ')[-1])
         next_min_index = max(current_min_index - 100, 0)
         next_max_index = current_min_index - 1
 
         if next_min_index > 0:
-            view['blocks'].insert(1,{
+            view['blocks'].insert(1, {
                 'type': 'actions',
                 'elements': [{
                     'type': 'button',
@@ -212,7 +226,7 @@ def update_update_project_window(ack, body, client):
                     'style': 'danger',
                     'value': 'click_me_123',
                     'action_id': 'show-prev-proj'
-                },{
+                }, {
                     'type': 'button',
                     'text': {
                         'type': 'plain_text',
@@ -221,11 +235,11 @@ def update_update_project_window(ack, body, client):
                     'style': 'primary',
                     'value': 'click_me_123',
                     'action_id': 'show-next-proj'
-                }          
+                }
                 ]
             })
         else:
-            view['blocks'].insert(1,{
+            view['blocks'].insert(1, {
                 'type': 'actions',
                 'elements': [{
                     'type': 'button',
@@ -236,17 +250,17 @@ def update_update_project_window(ack, body, client):
                     'style': 'primary',
                     'value': 'click_me_123',
                     'action_id': 'show-next-proj'
-                }    
+                }
                 ]
             })
-            
+
         view['blocks'][0]['element']['options'] = [{
-						'text': {
-							'type': 'plain_text',
-							'text': p['name'],
-						},
-						'value': p['id'] + ' - ' + str(projects.index(p))
-					} for i,p in enumerate(projects[next_min_index:next_max_index+1])]
+            'text': {
+                'type': 'plain_text',
+                'text': p['name'],
+            },
+            'value': p['id'] + ' - ' + str(projects.index(p))
+        } for i, p in enumerate(projects[next_min_index:next_max_index+1])]
 
     client.views_update(
         view_id=body['view']['id'],
@@ -263,16 +277,20 @@ def open_add_user_window(ack, body, client):
         view=views.view_add_user()
     )
 
+
 @app.message("start")
-def say_hello(client, message,say):
+def say_hello(client, message, say):
     channel_id = message['channel']
-    if channel_id=='C03VATR9BPD':
+    if channel_id == 'C03VATR9BPD':
         say(
-                blocks=views.clockify_buttons(),
-                text="Select action"
-            )
+            blocks=views.clockify_buttons(),
+            text="Select action"
+        )
+
+
+def handler(event, context):
+    return SlackRequestHandler(app=app).handle(event, context)
 
 
 if __name__ == '__main__':
     app.start(port=int(os.environ.get('PORT', 3000)))
-
