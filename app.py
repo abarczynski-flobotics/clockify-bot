@@ -1,5 +1,4 @@
 import os
-import sys
 from dotenv import load_dotenv
 import clockify_api as clockify_api
 from slack_bolt import App
