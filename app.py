@@ -9,26 +9,26 @@ from slack_bolt.oauth.oauth_settings import OAuthSettings
 from slack_sdk.oauth.installation_store import FileInstallationStore
 from slack_sdk.oauth.state_store import FileOAuthStateStore
 from slack_bolt.authorization import authorize
-#from slack_bolt.adapter.aws_lambda import SlackRequestHandler
+from slack_bolt.adapter.aws_lambda import SlackRequestHandler
 
 env_path = '.env'
 load_dotenv(dotenv_path=env_path)
 
-oauth_settings = OAuthSettings(
-    client_id=os.environ["SLACK_CLIENT_ID"],
-    client_secret=os.environ["SLACK_CLIENT_SECRET"],
-    scopes=["channels:history", "channels:read", "chat:write", "groups:history",
-            "groups:read", "groups:write", "users:read", "im:history"],
-    installation_store=FileInstallationStore(base_dir="./data/installations"),
-    state_store=FileOAuthStateStore(
-        expiration_seconds=600, base_dir="./data/states"),
-    install_page_rendering_enabled=False
-)
+# oauth_settings = OAuthSettings(
+#     client_id=os.environ["SLACK_CLIENT_ID"],
+#     client_secret=os.environ["SLACK_CLIENT_SECRET"],
+#     scopes=["channels:history", "channels:read", "chat:write", "groups:history",
+#             "groups:read", "groups:write", "users:read", "im:history"],
+#     installation_store=FileInstallationStore(base_dir="./data/installations"),
+#     state_store=FileOAuthStateStore(
+#         expiration_seconds=600, base_dir="./data/states"),
+#     install_page_rendering_enabled=False
+# )
 
 app = App(
-    # token=os.environ.get('SLACK_TOKEN'),
+    token=os.environ.get('SLACK_TOKEN'),
     signing_secret=os.environ.get('SIGNING_SECRET'),
-    oauth_settings=oauth_settings,
+    # oauth_settings=oauth_settings,
     process_before_response=True
 )
 
@@ -289,9 +289,9 @@ def say_hello(client, message, say):
         )
 
 
-# def handler(event, context):
- #   return SlackRequestHandler(app=app).handle(event, context)
+SlackRequestHandler.clear_all_log_handlers()
 
 
-if __name__ == '__main__':
-    app.start(port=int(os.environ.get('PORT', 3000)))
+def handler(event, context):
+    slack_handler = SlackRequestHandler(app=app)
+    return slack_handler.handle(event, context)
