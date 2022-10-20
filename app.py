@@ -4,10 +4,10 @@ import clockify_api as clockify_api
 from slack_bolt import App
 import views as views
 import prepare_json as prepare_json
-from slack_bolt.oauth.oauth_settings import OAuthSettings
-from slack_sdk.oauth.installation_store import FileInstallationStore
-from slack_sdk.oauth.state_store import FileOAuthStateStore
-from slack_bolt.authorization import authorize
+# from slack_bolt.oauth.oauth_settings import OAuthSettings
+# from slack_sdk.oauth.installation_store import FileInstallationStore
+# from slack_sdk.oauth.state_store import FileOAuthStateStore
+# from slack_bolt.authorization import authorize
 from slack_bolt.adapter.aws_lambda import SlackRequestHandler
 
 env_path = '.env'
